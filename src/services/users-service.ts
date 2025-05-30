@@ -1,14 +1,4 @@
-export interface User {
-    id: number
-    name: string
-    email: string
-    username: string
-    address: {
-        street: string;
-        suite: string;
-        city: string;
-    };
-  }
+import { User } from '../types';
   
 export async function fetchUsers(): Promise<User[]> {
     try {
@@ -19,9 +9,9 @@ export async function fetchUsers(): Promise<User[]> {
     }
 }
 
-export async function getUserInfo(userId: number): Promise<User> {
-    if (typeof userId !== 'number') {
-        throw new Error('Invalid userId. It must be a positive number.');
+export async function getUserInfo(userId: string): Promise<User> {
+    if (userId === undefined) {
+        throw new Error('Invalid userId');
     }
 
     const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`);

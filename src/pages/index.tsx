@@ -1,2 +1,3 @@
-export { default as TasksList } from './TasksList';
-export { default as UsersList } from './UsersList';
+export { default as Home } from './Home';
+export { default as TasksPage } from './tasks/TasksPage';
+export { default as UsersPage } from './users/UsersPage';

@@ -1,14 +1,9 @@
-export interface Task {
-    userId: number
-    id: number
-    title: string
-    completed: boolean
-  }
+import { Tasks} from "../types";
 
-  export async function fetchTasks(): Promise<Task[]> {
+  export async function fetchTasks(): Promise<Tasks> {
     try {
       const response = await fetch(`https://jsonplaceholder.typicode.com/todos`);
-      const data: Task[] = await response.json();
+      const data: Tasks = await response.json();
       
       return Promise.resolve(data);
 
