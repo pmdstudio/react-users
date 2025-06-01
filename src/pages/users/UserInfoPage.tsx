@@ -1,5 +1,6 @@
 import { useUserInfo, usePosts } from '../../hooks';
 import React from 'react';
+import UserInfo from './components/UserInfo';
 
 const UserInfoPage: React.FC = () => {
 
@@ -11,19 +12,13 @@ const UserInfoPage: React.FC = () => {
 
   return (
     <div className="container mt-4">
-    <div className="card mb-4 shadow-sm">
-      <div className="card-body d-flex align-items-center">
-        <img
-        src="https://placehold.co/80x80?text=LG"
-        alt={userInfo.name}
-        className="rounded-circle me-3"
-        />
-        <div>
-        <h4 className="card-title mb-1">{userInfo.name}</h4>
-        <h6 className="card-subtitle mb-2 text-muted">{userInfo.email}</h6>
+      <div className="row">
+        <div className="col">
+          <UserInfo userData={userInfo} />
         </div>
       </div>
-    </div>
+      <div className="row">
+        <div className="col">
     <h2>User posts</h2>
     <table className="table table-striped table-bordered">
       <thead>
@@ -41,6 +36,10 @@ const UserInfoPage: React.FC = () => {
         ))}
       </tbody>
     </table>
+
+        </div>
+      </div>
+
     </div>
   )
 }
