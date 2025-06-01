@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { getUserInfo, User } from '../services';
+import { getUserInfo } from '../services';
 import { useParams } from 'react-router-dom';
+import { User } from '../types';
 
 export function useUserInfo() {
   const { userId } = useParams();
@@ -11,7 +12,7 @@ export function useUserInfo() {
 
   useEffect(() => {
     if (userId !== undefined && !isNaN(Number(userId))) {
-      setLoadingUserInfo(true); // при нов userId да показваме loading
+      setLoadingUserInfo(true);
       getUserInfo(userId)
         .then(data => setUserInfo(data))
         .catch(err => setErrorUserInfo(err.message))
@@ -19,7 +20,7 @@ export function useUserInfo() {
     } else {
       setLoadingUserInfo(false);
     }
-  }, [userId]); // ← извиква се само когато userId се промени
+  }, [userId]);
 
   return { userInfo, loadingUserInfo, errorUserInfo };
 }

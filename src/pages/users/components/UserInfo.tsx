@@ -1,48 +1,46 @@
-import { useUserInfo, usePosts } from '../../../hooks';
 import React from 'react';
+import { User } from '../../../types';
 
-const UserInfo: React.FC = () => {
+type Props = {
+    userData: User;
+};
 
-    const { userInfo, loadingUserInfo, errorUserInfo } = useUserInfo();   
-    const { posts, loadingPosts, errorPosts } = usePosts();
+const getUserAbbreviation = (name: string) =>
+    name
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase())
+        .join('');
 
-    if (loadingUserInfo) return <p className="text-center mt-4">Loading user info...</p>
-    if (errorUserInfo) return <p className="text-danger text-center mt-4">Error: {errorUserInfo}</p>
+const UserInfo: React.FC<Props> = ({ userData }) => {
+    const abbr = getUserAbbreviation(userData.name);
 
-  return (
-    <div className="container mt-4">
-    <div className="card mb-4 shadow-sm">
-      <div className="card-body d-flex align-items-center">
-        <img
-        src="https://placehold.co/80x80?text=LG"
-        alt={userInfo.name}
-        className="rounded-circle me-3"
-        />
-        <div>
-        <h4 className="card-title mb-1">{userInfo.name}</h4>
-        <h6 className="card-subtitle mb-2 text-muted">{userInfo.email}</h6>
+    return (
+        <div className="card mb-4">
+            <div className="card-body d-flex align-items-center">
+                <img
+                    src={`https://placehold.co/80x80?text=${abbr}`}
+                    alt={userData.name}
+                    className="rounded-circle me-3"
+                />
+                <div className="flex-grow-1">
+                    <div className="row">
+                        <div className="col-4">
+                            <h4 className="card-title mb-1">{userData.name}</h4>
+                            <h6 className="card-subtitle mb-2 text-muted">
+                                @{userData.username}
+                            </h6>
+                        </div>
+                        <div className="col-8">
+                            <i className="bi bi-envelope"></i> {userData.email}
+                            <br />
+                            <i className="bi bi-geo-alt"></i>{' '}
+                            {`${userData.address.street}, ${userData.address.suite}, ${userData.address.city}`}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <h2>User posts</h2>
-    <table className="table table-striped table-bordered">
-      <thead>
-        <tr>
-        <th>Title</th>
-        <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {posts.map((post) => (
-        <tr key={post.id}>
-          <td>{post.title}</td>
-          <td>{post.completed ? 'Completed' : 'Not Completed'}</td>
-        </tr>
-        ))}
-      </tbody>
-    </table>
-    </div>
-  )
-}
+    );
+};
 
 export default UserInfo;

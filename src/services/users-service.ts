@@ -17,3 +17,19 @@ export async function getUserInfo(userId: string): Promise<User> {
     const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userId}`);
     return response.json();
 }
+
+export async function updateUserInfo(userData: User): Promise<User> {
+
+    try {
+        const response = await fetch(`https://jsonplaceholder.typicode.com/users/${userData.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData), 
+        });
+        return response.json();
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}

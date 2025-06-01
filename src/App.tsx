@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
-import { Home, UsersPage, TasksPage } from './pages';
+import { Home, UsersPage, UserInfoPage, TasksPage } from './pages';
 
 function App() {
 	return (
@@ -14,16 +14,21 @@ function App() {
 					</div>
 				</div>
 			</nav>
-			<div className="container py-5">
+			<div className="container flex flex-grow-1 py-5">
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/users">
 						<Route index element={<UsersPage />} />
-						<Route path=":userId" element={<UsersPage />} />
+						<Route path=":userId" element={<UserInfoPage />} />
 					</Route>
 					<Route path="/tasks" element={<TasksPage />} />
 				</Routes>
 			</div>
+		<footer className="footer mt-auto py-3 bg-body-tertiary">
+			<div className="container text-center">
+				<span className="text-body-secondary">develop by <strong>Marin Petrov</strong>, petrovm@abv.bg</span>
+			</div>
+		</footer>			
 		</BrowserRouter>
 	)
 }

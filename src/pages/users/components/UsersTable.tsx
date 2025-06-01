@@ -1,16 +1,36 @@
 import { Link } from 'react-router-dom';
-import React from 'react';
-import { Users } from '../../../types';
+import React, { useState } from 'react';
+import { User, Users } from '../../../types';
+import UserEdit from './UserEdit';
+import { useUpdateUser } from '../../../hooks';
+import UserInfo from './UserInfo';
 
 type Props = {
   users: Users;
+  onChange: (user: User) => void;
 }
 
-const UsersTable: React.FC<Props> = ({users}) => {
+const UsersTable: React.FC<Props> = ({users, onChange}) => {
+
+    const [viewEditUser, setViewEditUser] = useState<boolean>(false);
+    const {updateUser}  = useUpdateUser();
+
+    const handleEditUser = () => {
+        setViewEditUser(!viewEditUser);
+    };
+
+    const handleUpdateUserData = (newUserData: User) => {
+        // simulate backend update
+        updateUser(newUserData);
+        // simulate frontend update in the parent component
+        onChange(newUserData);
+        // close the edit view
+        handleEditUser();
+    };
 
   return (
     <>
-    <h2 className="mb-4">Users</h2>
+      <h2><i className="bi bi-person"></i> Users</h2>
       <div className="accordion" id="usersAccordion">
         {users.map((user) => (
           <div className="accordion-item" key={user.id}>
@@ -23,7 +43,7 @@ const UsersTable: React.FC<Props> = ({users}) => {
                 aria-expanded="false"
                 aria-controls={`collapse-${user.id}`}
               >
-                {user.name}
+                <span className="badge text-bg-primary me-2">{user.id}</span> {user.name}
               </button>
             </h2>
             <div
@@ -33,11 +53,21 @@ const UsersTable: React.FC<Props> = ({users}) => {
               data-bs-parent="#usersAccordion"
             >
               <div className="accordion-body">
-                <p><strong>ID:</strong> {user.id}</p>
-                <p><strong>Username:</strong> {user.username}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Address:</strong> {user.address.street}, {user.address.suite}, {user.address.city}</p>
-                <Link className="nav-link" to={`/users/${user.id}`}>View posts</Link>
+                {viewEditUser && (
+                    <UserEdit 
+                        userData={user}
+                        onSubmit={handleUpdateUserData}
+                        onClose={() => setViewEditUser(false)}
+                    />
+                )}
+                {!viewEditUser && (
+                  <>
+                    <UserInfo userData={user}/>
+                    <Link className="btn btn-primary me-1" to={`/users/${user.id}`}>View posts</Link>
+                    <div className="btn btn-link text-danger" onClick={handleEditUser}>Edit user</div>
+                </>
+                )}
+
               </div>
             </div>
           </div>

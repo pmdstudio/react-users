@@ -1,26 +1,40 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useUsers } from '../../hooks';
-import UserInfo from './components/UserInfo';
 import UsersTable from './components/UsersTable';
+import { Loading } from '../../components';
+import { User } from '../../types';
 
 const UsersPage: React.FC = () => {
-	const { users, loading, error } = useUsers();
-	const { userId } = useParams();
+	const { users, loading } = useUsers();
 
-	if (loading) {
-		return <p className="text-center mt-4">Loading users...</p>;
-	}
+	const [usersList, setUsersList] = useState(users || []);
 
-	if (error) {
-		return <p className="text-danger text-center mt-4">Error: {error}</p>;
-	}
+	// This effect runs when the users data is fetched or updated
+	useEffect(() => {
+		if (users) {
+			setUsersList(users);
+		}
+	}, [users]);
 
-	if (userId) {
-		return <UserInfo />;
-	}
+	// This function updates the users list when a user is edited
+	const updateUsersList = (updatedUser: User) => {
+			setUsersList(prevUsers =>
+				prevUsers.map((user) =>
+					user.id === updatedUser.id
+					? { ...user, ...updatedUser }
+					: user
+				)
+			);
+		};
 
-	return <UsersTable users={users} />;
+	return (
+		<>
+		<div className='container position-relative h-100'>
+			{loading && <Loading text='Loading users ...'/>}
+			{!loading && <UsersTable users={usersList} onChange={updateUsersList} /> }
+		</div>
+		</>
+	);
 };
 
 export default UsersPage;
