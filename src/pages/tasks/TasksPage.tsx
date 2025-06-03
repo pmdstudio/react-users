@@ -1,48 +1,104 @@
-import { useTasks } from '../../hooks';
-import React from 'react';
+import { Breadcrumbs, Loading } from '../../components';
+import { useTasksManager } from '../../hooks';
+import React, { useEffect } from 'react';
+import TasksFilter from './components/TasksFilter';
+import { TaskFilter } from '../../types';
 
 
 const TasksPage: React.FC = () => {
 
-    const { tasks, loading, error } = useTasks()
+    const { loadingTasks, setCurrentPage, setPageSize, tasksPages, setFilter, tasks } = useTasksManager();
+    const [selectedPage, setSelectedPage] = React.useState(1);
+    const pageSize = 15; // Default page size, can be adjusted as needed
 
-    if (loading) return <p className="text-center mt-4">Loading users...</p>
-    if (error) return <p className="text-danger text-center mt-4">Error: {error}</p>
+    useEffect(() => {
+        // Set the number of tasks per page
+        setPageSize(pageSize); 
+    }, [setPageSize]);
+
+    const handlePageChange = (page: number) => {
+        setSelectedPage(page);
+        setCurrentPage(page);
+    };
+    
+
+    const onFilterChange = (filter: TaskFilter) => {
+        // Logic to handle filter change can be added here
+        setFilter(filter);
+        setSelectedPage(1); // Reset to first page on filter change
+        setCurrentPage(1);        
+    };
 
 return (
     <>
-        <h2 className="mb-4">Tasks</h2>
-        <div className="accordion" id="tasksAccordion">
-            {tasks.map((task) =>
+    <Breadcrumbs />
+    <div className='container position-relative h-100'>
+        {loadingTasks && <Loading text='Loading tasks' />}
+        {!loadingTasks && (
+<>
+<h2 className="mb-4">Tasks</h2>
+<TasksFilter onFilterChange={onFilterChange} />
+<div className='table-responsive'>
+				<table className='table table-hover'>
+					<thead className='table-light'>
+						<tr>
+							<th scope='col' style={{ width: "30px" }}></th>
+							<th scope='col'>Title</th>
+                            <th scope='col'>User</th>
+							<th scope='col' style={{ width: "100px" }}></th>
+						</tr>
+					</thead>
+					<tbody>
+						{tasks.map((task, index) => (
+							<tr key={task.id}>
+                                <td>{(selectedPage - 1) * pageSize + index + 1}</td>
+								<td>{task.title}</td>
+                                <td>{task.userId}</td>
+                                <td>
+									<span
+										className={`badge bg-${task.completed ? "success" : "warning"}`}>
+										{task.completed
+											? "Completed"
+											: "Pending"}
+									</span>
+								</td>
+							</tr>
+						))}
+					</tbody>
+                    <tfoot>
+                        <tr>
+                            <td colSpan={4} className="text-center">
 
-                    <div className="accordion-item" key={task.id}>
-                        <h2 className="accordion-header" id={`heading-${task.id}`}>
-                            <button
-                                className="accordion-button collapsed"
-                                type="button"
-                                data-bs-toggle="collapse"
-                                data-bs-target={`#collapse-${task.id}`}
-                                aria-expanded="false"
-                                aria-controls={`collapse-${task.id}`}
-                            >
-                                {task.title}
-                            </button>
-                        </h2>
-                        <div
-                            id={`collapse-${task.id}`}
-                            className="accordion-collapse collapse"
-                            aria-labelledby={`heading-${task.id}`}
-                            data-bs-parent="#tasksAccordion"
-                        >
-                            <div className="accordion-body">
-                                <p><strong>ID:</strong> {task.id}</p>
-                                <p><strong>Status:</strong> {task.completed ? 'Completed' : 'Pending'}</p>                                
-                            </div>
-                        </div>
-                    </div>
-                
-            )}
-        </div>
+                                <nav>
+                                    <ul className="pagination justify-content-center">
+                                        {Array.from({ length: tasksPages }, (_, index) => {
+                                            const page = index + 1;
+                                            return (
+                                                <li
+                                                    key={page}
+                                                    className={`page-item ${
+                                                        selectedPage === page ? "active" : ""
+                                                    }`}
+                                                >
+                                                    <button
+                                                        className="page-link"
+                                                        onClick={() => handlePageChange(page)}
+                                                    >
+                                                        {page}
+                                                    </button>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </nav>
+                            </td>
+                        </tr>
+                    </tfoot>
+				</table>
+			</div>
+</>
+        )}
+    </div>
     </>
 )
 }
