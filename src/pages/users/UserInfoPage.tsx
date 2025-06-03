@@ -1,47 +1,81 @@
-import { useUserInfo, usePosts } from '../../hooks';
-import React from 'react';
-import UserInfo from './components/UserInfo';
+import { useUserInfo, usePostsManager, useUsersManager } from "../../hooks";
+import React, { useEffect, useState } from "react";
+import { User } from "../../types";
+import UserPosts from "./components/UserPosts";
+import UserInfo from "./components/UserInfo";
+import UserEdit from "./components/UserEdit";
+import { Breadcrumbs, Loading } from "../../components";
 
-const UserInfoPage: React.FC = () => {
+const UserInfoPage = () => {
+	const { userInfo, loadingUserInfo, errorUserInfo } = useUserInfo();
+	const [userData, setUserData] = useState<User | null>(null);
 
-    const { userInfo, loadingUserInfo, errorUserInfo } = useUserInfo();   
-    const { posts, loadingPosts, errorPosts } = usePosts();
+	const { posts, loadingPosts, errorPosts, deletePostInfo } =
+		usePostsManager();
 
-    if (loadingUserInfo || loadingPosts) return <p className="text-center mt-4">Loading ...</p>
-    if (errorUserInfo || errorPosts) return <p className="text-danger text-center mt-4">Error: {errorUserInfo}</p>
+	const [viewEditUser, setViewEditUser] = React.useState<boolean>(false);
+	const { updateUser } = useUsersManager();
 
-  return (
-    <div className="container mt-4">
-      <div className="row">
-        <div className="col">
-          <UserInfo userData={userInfo} />
-        </div>
-      </div>
-      <div className="row">
-        <div className="col">
-    <h2>User posts</h2>
-    <table className="table table-striped table-bordered">
-      <thead>
-        <tr>
-        <th>Title</th>
-        <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {posts.map((post) => (
-        <tr key={post.id}>
-          <td>{post.title}</td>
-          <td>{post.completed ? 'Completed' : 'Not Completed'}</td>
-        </tr>
-        ))}
-      </tbody>
-    </table>
+	const handleEditUser = () => {
+		setViewEditUser(!viewEditUser);
+	};
+	const handleUpdateUserData = (newUserData: User) => {
+		// backend update
+		updateUser(newUserData);
+		// frontend update
+		setUserData(newUserData);
+		handleEditUser();
+	};
 
-        </div>
-      </div>
+	useEffect(() => {
+		if (errorUserInfo) {
+			console.error("Error fetching user info:", errorUserInfo);
+		}
+		if (errorPosts) {
+			console.error("Error fetching posts:", errorPosts);
+		}
+	}, [errorPosts, errorUserInfo]);
 
-    </div>
-  )
-}
+	return (
+		<>
+			<Breadcrumbs />
+			<div className='container position-relative'>
+				{(loadingUserInfo || loadingPosts) && <Loading />}
+				<div className='row'>
+					<div className='col'>
+						{viewEditUser && (
+							<UserEdit
+								userData={userData || userInfo}
+								onSubmit={handleUpdateUserData}
+								onClose={() => setViewEditUser(false)}
+							/>
+						)}
+						{!viewEditUser && (
+							<>
+								<UserInfo userData={userData || userInfo} />
+								<div
+									className='btn btn-link text-danger'
+									onClick={handleEditUser}>
+									Edit user
+								</div>
+							</>
+						)}
+					</div>
+				</div>
+				<div className='row'>
+					<div className='col'>
+						<h2>User posts</h2>
+						{posts && (
+							<UserPosts
+								userPosts={posts}
+								onDelete={deletePostInfo}
+							/>
+						)}
+					</div>
+				</div>
+			</div>
+		</>
+	);
+};
 
 export default UserInfoPage;

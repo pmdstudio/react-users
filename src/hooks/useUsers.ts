@@ -1,52 +1,72 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useState, useEffect, useCallback } from 'react';
-import { fetchUsers, updateUserInfo } from '../services';
-import { User } from '../types';
+import { useState, useEffect, useCallback } from "react";
+import { fetchUsers, updateUserInfo, getUserInfo } from "../services";
+import { User } from "../types";
+import { useParams } from "react-router-dom";
 
-export function useUsers() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export function useUsersManager() {
+	const [users, setUsers] = useState<User[]>([]);
+	const [loadingUsers, setLoadingUsers] = useState(true);
+	const [errorUsers, setErrorUsers] = useState<string | null>(null);
 
+	const getUsers = useCallback(async () => {
+		setLoadingUsers(true);
+		setErrorUsers(null);
+		try {
+			const data = await fetchUsers();
+			setUsers(data);
+		} catch (error) {
+			setErrorUsers("Error fetching users");
+		} finally {
+			// simulate a delay for loading state
+			setTimeout(() => setLoadingUsers(false), 1000);
+		}
+	}, []);
 
-  const getUsers = useCallback(async () => {
-    setLoading(true); 
-    setError(null);
-    try {
-      const data = await fetchUsers();
-      setUsers(data);
-    } catch (error) {
-      setError('Error fetching users');
-    } finally {
-      // simulate a delay for loading state
-      setTimeout(() => setLoading(false), 1000);
-    }
-  }, []);
+	const updateUser = async (data: User) => {
+		setLoadingUsers(true);
+		try {
+			const updatedUser = await updateUserInfo(data);
 
-  useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+			// Update the user in the state
+			setUsers((prevUsers) =>
+				prevUsers.map((user) =>
+					user.id === updatedUser.id ? updatedUser : user
+				)
+			);
+		} catch (error) {
+			setErrorUsers("Failed to update user information");
+		} finally {
+			// simulate a delay for loading state
+			setTimeout(() => setLoadingUsers(false), 1000);
+		}
+	};
 
-  return { users, loading, error, refetch: getUsers };
+	useEffect(() => {
+		getUsers();
+	}, [getUsers]);
+
+	return { users, loadingUsers, errorUsers, getUsers, updateUser };
 }
 
-export function useUpdateUser() {
-  const [userData, setUserData] = useState<User | null>(null);
-  const [isUpdatingUser, setIsUpdatingUser] = useState(false);
-  const [errorUpdateUser, setErrorUpdateUser] = useState<string | null>(null);
+export function useUserInfo() {
+	const { userId } = useParams();
 
-  const updateUser = async (data: User) => {
-    setIsUpdatingUser(true);
-    try {
-      const updatedUser = await updateUserInfo(data);
-      setUserData(updatedUser);
-    } catch (error) {
-      setErrorUpdateUser('Failed to update user information');
-    } finally {
-      setIsUpdatingUser(false);
-    }
-  };
+	const [loadingUserInfo, setLoadingUserInfo] = useState<boolean>(true);
+	const [errorUserInfo, setErrorUserInfo] = useState<string | null>(null);
+	const [userInfo, setUserInfo] = useState<User>({} as User);
 
-  return { userData, isUpdatingUser, errorUpdateUser, updateUser };
+	useEffect(() => {
+		if (userId !== undefined && !isNaN(Number(userId))) {
+			setLoadingUserInfo(true);
+			getUserInfo(userId)
+				.then((data) => setUserInfo(data))
+				.catch((err) => setErrorUserInfo(err.message))
+				.finally(() => setLoadingUserInfo(false));
+		} else {
+			setLoadingUserInfo(false);
+		}
+	}, [userId]);
+
+	return { userInfo, loadingUserInfo, errorUserInfo };
 }
-

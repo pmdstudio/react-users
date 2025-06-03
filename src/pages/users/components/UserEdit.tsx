@@ -1,122 +1,204 @@
-import React, { useState } from 'react';
-import { User } from '../../../types';
-import Loading from '../../../components/Loading';
+import React, { useEffect, useState } from "react";
+import { User } from "../../../types";
+import Loading from "../../../components/Loading";
+import isEqual from "lodash.isequal";
 
 type Props = {
-    userData: User;
-    onSubmit: (newUserData: User) => void;
-    onClose: () => void;
-}
+	userData: User;
+	onSubmit: (newUserData: User) => void;
+	onClose: () => void;
+};
 
 const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
+	// local state to manage user data being edited, deep clone to avoid direct mutation
+	const [editUserData, setEditUserData] = useState<User>(
+		JSON.parse(JSON.stringify(userData))
+	);
 
-    const [editUserData, setEditUserData] = useState<User>({
-        id: userData.id,
-        name: userData.name,
-        username: userData.username,
-        email: userData.email,
-        address: {
-            street: userData.address.street,
-            suite: userData.address.suite,
-            city: userData.address.city,
-        },
-    });
+	const [invalidFields, setInvalidFields] = useState<string[]>([]);
+	const [isEditing, setIsEditing] = useState<boolean>(false);
+	const [enableReset, setEnableReset] = useState<boolean>(false);
+	const [enableSave, setEnableSave] = useState<boolean>(false);
+	const [showValidationError, setShowValidationError] =
+		useState<boolean>(false);
 
-    // loading state for the form submission
-    const [isEditing, setIsEditing] = useState<boolean>(false);
+	// check if a field is valid
+	const isValidField = React.useCallback(
+		(name: string) => {
+			return !invalidFields.includes(name);
+		},
+		[invalidFields]
+	);
 
-    const [enableButtons, setEnableButtons] = useState<boolean>(false);
+	// handle input changes and validation
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setEditUserData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-        setEnableButtons(true);
-    };
-    
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setIsEditing(true);
-        // simulate loading state
-        setTimeout(() => {
-            onSubmit(editUserData);
-            setIsEditing(false);
-        }, 1000);
-    };
+		if (value.trim() === "") {
+			setInvalidFields((prev) => [...prev, name]);
+		} else {
+			setInvalidFields((prev) => prev.filter((field) => field !== name));
+		}
 
-    const handleReset = () => {
-        setEditUserData(userData);
-        setEnableButtons(false);
-    };
+		if (name === "street" || name === "suite" || name === "city") {
+			setEditUserData((prev) => ({
+				...prev,
+				address: {
+					...prev.address,
+					[name]: value,
+				},
+			}));
+		} else {
+			setEditUserData((prev) => ({
+				...prev,
+				[name]: value,
+			}));
+		}
+	};
 
-    return (
-        <div className='position-relative'>
-        {isEditing && (
-            <Loading text='Updating user ...'/>
-        )}
-        
-        <form onSubmit={handleSubmit} onReset={handleReset}>
-            <div className='row'>
-            <div className="col mb-3">
-                <label htmlFor="name" className="form-label"><strong>Name: </strong></label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="name"
-                    name="name"
-                    value={editUserData.name}
-                    onChange={handleChange}
-                />
-            </div>
-            <div className="col mb-3">
-                <label htmlFor="username" className="form-label"><strong>Username:</strong></label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="username"
-                    name="username"
-                    value={editUserData.username}
-                    onChange={handleChange}
-                />
-            </div>
-            </div>
-            <div className='row'>
-            <div className="col mb-3">
-                <label htmlFor="email" className="form-label"><strong>Email:</strong></label>
-                <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    name="email"
-                    value={editUserData.email}
-                    onChange={handleChange}
-                />
-            </div>
-            <div className="col mb-3">
-                <label htmlFor="address" className="form-label"><strong>Address:</strong></label>
-                <input
-                    type="text"
-                    className="form-control"
-                    id="address"
-                    name="address"
-                    value={`${editUserData.address.street}, ${editUserData.address.suite}, ${editUserData.address.city}`}
-                    onChange={handleChange}
-                />
-            </div>
-            </div>
-            <button type="submit" className="btn btn-primary" disabled={!enableButtons}>Save Changes</button>
-            {enableButtons && (
-            <button type="reset" className="btn btn-link" disabled={!enableButtons}>Reset</button>
-            )}
-            {!enableButtons && (
-               <button className="btn btn-link text-danger" onClick={onClose}>Cancel</button>
-            )}
-        </form>
-        </div>
+	// handle form submission
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setIsEditing(true);
 
-    );
+		// simulate loading state
+		setTimeout(() => {
+			onSubmit(editUserData);
+			setIsEditing(false);
+		}, 500);
+	};
+
+	// reset form to initial user data
+	const handleReset = () => {
+		setEditUserData(userData);
+		setInvalidFields([]);
+		setEnableReset(false);
+		setEnableSave(false);
+	};
+
+	// track invalid fields and form changes
+	useEffect(() => {
+		// Only compare after initial mount to avoid isChanged being true on first render
+		const isChanged = !isEqual(editUserData, userData);
+		setEnableSave(isChanged && invalidFields.length === 0);
+		setEnableReset(isChanged);
+		setShowValidationError(invalidFields.length > 0);
+	}, [editUserData, userData, invalidFields]);
+
+	// Ensure editUserData is always in sync with userData
+	useEffect(() => {
+		setEditUserData(JSON.parse(JSON.stringify(userData)));
+		setInvalidFields([]);
+	}, [userData]);
+
+	return (
+		<div className='position-relative'>
+			{isEditing && <Loading text='Updating user ...' />}
+
+			<form onSubmit={handleSubmit} onReset={handleReset}>
+				<div className='row'>
+					<div className='col mb-3'>
+						<label htmlFor='name' className='form-label'>
+							<strong>Name: </strong>
+						</label>
+						<input
+							type='text'
+							className={`form-control ${!isValidField("name") ? "is-invalid" : ""}`}
+							id='name'
+							name='name'
+							value={editUserData.name}
+							onChange={handleChange}
+						/>
+					</div>
+					<div className='col mb-3'>
+						<label htmlFor='username' className='form-label'>
+							<strong>Username:</strong>
+						</label>
+						<input
+							type='text'
+							className={`form-control ${!isValidField("username") ? "is-invalid" : ""}`}
+							id='username'
+							name='username'
+							value={editUserData.username}
+							onChange={handleChange}
+						/>
+					</div>
+				</div>
+				<div className='row'>
+					<div className='col mb-3'>
+						<label htmlFor='email' className='form-label'>
+							<strong>Email:</strong>
+						</label>
+						<input
+							type='email'
+							className={`form-control ${!isValidField("email") ? "is-invalid" : ""}`}
+							id='email'
+							name='email'
+							value={editUserData.email}
+							onChange={handleChange}
+						/>
+					</div>
+				</div>
+				<div className='row'>
+					<div className='col mb-3'>
+						<label htmlFor='street' className='form-label'>
+							<strong>Street:</strong>
+						</label>
+						<input
+							type='text'
+							className={`form-control ${!isValidField("street") ? "is-invalid" : ""}`}
+							id='street'
+							name='street'
+							value={editUserData.address.street}
+							onChange={handleChange}
+						/>
+					</div>
+					<div className='col mb-3'>
+						<label htmlFor='addressSuite' className='form-label'>
+							<strong>Suite:</strong>
+						</label>
+						<input
+							type='text'
+							className={`form-control ${!isValidField("suite") ? "is-invalid" : ""}`}
+							id='addressSuite'
+							name='suite'
+							value={editUserData.address.suite}
+							onChange={handleChange}
+						/>
+					</div>
+				</div>
+				<div className='row'>
+					<div className='col'>
+						<button
+							type='submit'
+							className='btn btn-primary'
+							disabled={!enableSave}>
+							Save Changes
+						</button>
+						{enableReset && (
+							<button type='reset' className='btn btn-link'>
+								Reset
+							</button>
+						)}
+						{!enableReset && (
+							<button
+								className='btn btn-link text-danger'
+								onClick={onClose}>
+								Cancel
+							</button>
+						)}
+					</div>
+					<div className='col d-flex flex-column justify-content-center'>
+						{showValidationError && (
+							<span className='text-danger'>
+								<em>Please fill all required fields</em>
+							</span>
+						)}
+					</div>
+				</div>
+			</form>
+		</div>
+	);
 };
 
 export default UserEdit;
