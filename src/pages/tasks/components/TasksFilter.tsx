@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { TaskFilter } from "../../../types";
+import { TaskFilter, taskStatuses } from "../../../types";
+import { UsersFilter } from "../../../components";
 
 interface TasksFilterProps {
 	onFilterChange: (filter: TaskFilter) => void;
@@ -7,7 +8,7 @@ interface TasksFilterProps {
 
 const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 	const [filter, setFilter] = useState<TaskFilter>({
-		status: "",
+		completed: 0,
 		title: "",
 		userId: 0,
 	});
@@ -21,6 +22,7 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 	};
 
 	const handleSubmitFilter = () => {
+		console.log("Submitting filter:", filter);
 		onFilterChange(filter);
 	};
 
@@ -35,11 +37,14 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 						<select
 							className='form-select'
 							id='statusFilter'
-							name='status'
+							name='completed'
 							onChange={handleFilterChange}>
 							<option value=''>All</option>
-							<option value='completed'>Completed</option>
-							<option value='not_completed'>Not Completed</option>
+							{taskStatuses.map((status) => (
+								<option key={status.value} value={status.value}>
+									{status.title}
+								</option>
+							))}
 						</select>
 					</div>
 
@@ -61,16 +66,7 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 						<label htmlFor='ownerFilter' className='form-label'>
 							Owner
 						</label>
-						<select
-							className='form-select'
-							id='ownerFilter'
-							name='userId'
-							onChange={handleFilterChange}>
-							<option value=''>All</option>
-							<option value='1'>Marin Petrov</option>
-							<option value='2'>Anelia Anastasova</option>
-							<option value='3'>Stefan Nikolov</option>
-						</select>
+						<UsersFilter onChange={handleFilterChange} />
 					</div>
 
 					<div className='col-md-2 d-flex align-items-end'>
@@ -78,7 +74,7 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 							type='button'
 							onClick={handleSubmitFilter}
 							className='btn btn-primary w-100'>
-							Apply
+							Filter
 						</button>
 					</div>
 				</div>

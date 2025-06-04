@@ -14,11 +14,7 @@ export function useTasksManager() {
 
 	const [currentPage, setCurrentPage] = useState(1);
 	const [pageSize, setPageSize] = useState<number>(10);
-	const [filter, setFilter] = useState<TaskFilter>({
-		status: "",
-		title: "",
-		userId: 0,
-	});
+	const [filter, setFilter] = useState<TaskFilter>({} as TaskFilter);
 
 	const tasksPages = Math.ceil(tasks.length / pageSize);
 
@@ -47,19 +43,22 @@ export function useTasksManager() {
 	const applyTasksFilter = useCallback(
 		(filter: TaskFilter) => {
 			const filteredTasks = allTasks.filter((task) => {
-				const matchesStatus = filter.status
-					? filter.status === "completed"
-						? task.completed
-						: !task.completed
-					: true;
-				const matchesTitle = filter.title
-					? task.title
-							.toLowerCase()
-							.includes(filter.title.toLowerCase())
-					: true;
-				const matchesUserId = filter.userId
-					? task.userId === filter.userId
-					: true;
+				const matchesStatus =
+					filter.completed !== undefined
+						? Number(task.completed) == filter.completed
+						: true;
+
+				const matchesTitle =
+					filter.title !== ""
+						? task.title
+								.toLowerCase()
+								.includes(filter.title.toLowerCase())
+						: true;
+				const matchesUserId =
+					Number(filter.userId) > 0
+						? Number(task.userId) === Number(filter.userId)
+						: true;
+
 				return matchesStatus && matchesTitle && matchesUserId;
 			});
 			setTasks(filteredTasks);
