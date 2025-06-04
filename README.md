@@ -31,7 +31,7 @@ A modern React app to manage users, posts, and tasks using React, TypeScript, Re
 
 1. Clone the project:
 
-    git clone https://github.com/pmdstudio/react-users
+    git clone https://github.com/pmdstudio/react-users  
     cd react-users
 
 2. Install dependencies:
