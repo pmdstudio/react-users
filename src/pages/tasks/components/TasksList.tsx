@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Task, TaskWithUser, TASK_STATUS } from "../../../types";
 
 type Props = {
@@ -16,12 +16,16 @@ const TasksList: React.FC<Props> = ({
 	onStatusChange,
 	updatingTaskId,
 }) => {
-	const handleChangeStatus = (task: Task) => {
-		onStatusChange({
-			...task,
-			completed: !task.completed,
-		});
-	};
+	const [selectedTask, setSelectedTask] = useState<Task>();
+
+	useEffect(() => {
+		if (selectedTask) {
+			onStatusChange({
+				...selectedTask,
+				completed: !selectedTask.completed,
+			});
+		}
+	}, [selectedTask]);
 
 	return (
 		<>
@@ -74,6 +78,7 @@ const TasksList: React.FC<Props> = ({
 											className={`btn ${task.completed ? "btn-success" : "btn-warning"} btn-sm dropdown-toggle dropdown-toggle-split`}
 											data-bs-toggle='dropdown'
 											aria-expanded='false'
+											data-bs-auto-close='true'
 											disabled={
 												updatingTaskId === task.id
 											}>
@@ -81,17 +86,17 @@ const TasksList: React.FC<Props> = ({
 												Toggle Dropdown
 											</span>
 										</button>
-										<ul className='dropdown-menu'>
+										<ul className='dropdown-menu p-0 overflow-hidden'>
 											<li>
 												<button
-													className='dropdown-item'
+													className={`dropdown-item p-2 ${task.completed ? "text-warning" : "text-success"}`}
 													type='button'
-													onClick={() =>
-														handleChangeStatus(task)
-													}>
+													onClick={() => {
+														setSelectedTask(task);
+													}}>
 													{task.completed
-														? TASK_STATUS.completed
-														: TASK_STATUS.pending}
+														? "Open"
+														: "Complete"}
 												</button>
 											</li>
 										</ul>
