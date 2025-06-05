@@ -10,7 +10,7 @@ const UserInfoPage = () => {
 	const { userInfo, loadingUserInfo, errorUserInfo } = useUserInfo();
 	const [userData, setUserData] = useState<User | null>(null);
 
-	const { posts, loadingPosts, errorPosts, deletePostInfo } =
+	const { posts, loadingPosts, errorPosts, deletePostInfo, updatePostInfo } =
 		usePostsManager();
 
 	const [viewEditUser, setViewEditUser] = React.useState<boolean>(false);
@@ -38,36 +38,50 @@ const UserInfoPage = () => {
 
 	return (
 		<>
-			<div className='container position-relative'>
+			<div className='container position-relative p-0'>
 				{(loadingUserInfo || loadingPosts) && <Loading />}
 				<div className='row'>
-					<div className='col'>
+					<div className='col position-relative'>
 						{viewEditUser && (
-							<UserEdit
-								userData={userData || userInfo}
-								onSubmit={handleUpdateUserData}
-								onClose={() => setViewEditUser(false)}
-							/>
+							<>
+								<div className='card mb-1'>
+									<div className='card-body'>
+										<UserEdit
+											userData={userData || userInfo}
+											onSubmit={handleUpdateUserData}
+											onClose={() =>
+												setViewEditUser(false)
+											}
+										/>
+									</div>
+								</div>
+								<a
+									className='btn btn-link btn-sm my-2 mx-4 text-danger position-absolute top-0 end-0 z-10'
+									onClick={() => setViewEditUser(false)}>
+									<i className='bi bi-x-lg'></i>
+								</a>
+							</>
 						)}
 						{!viewEditUser && (
 							<>
 								<UserInfo userData={userData || userInfo} />
 								<div
-									className='btn btn-link text-danger'
+									className='btn btn-link btn-sm my-2 mx-4 text-danger position-absolute top-0 end-0 z-10'
 									onClick={handleEditUser}>
-									Edit user
+									Edit
 								</div>
 							</>
 						)}
 					</div>
 				</div>
-				<div className='row'>
+				<div className='row mt-4'>
 					<div className='col'>
-						<h2>User posts</h2>
+						<h3 className='mb-4'>User posts</h3>
 						{posts && (
 							<UserPosts
 								userPosts={posts}
 								onDelete={deletePostInfo}
+								onUpdate={updatePostInfo}
 							/>
 						)}
 					</div>

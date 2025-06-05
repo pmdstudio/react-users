@@ -97,7 +97,7 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 
 			<form onSubmit={handleSubmit} onReset={handleReset}>
 				<div className='row'>
-					<div className='col mb-3'>
+					<div className='col mb-1'>
 						<label htmlFor='name' className='form-label'>
 							<strong>Name: </strong>
 						</label>
@@ -110,7 +110,7 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 							onChange={handleChange}
 						/>
 					</div>
-					<div className='col mb-3'>
+					<div className='col mb-1'>
 						<label htmlFor='username' className='form-label'>
 							<strong>Username:</strong>
 						</label>
@@ -125,7 +125,7 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 					</div>
 				</div>
 				<div className='row'>
-					<div className='col mb-3'>
+					<div className='col mb-1'>
 						<label htmlFor='email' className='form-label'>
 							<strong>Email:</strong>
 						</label>
@@ -140,7 +140,20 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 					</div>
 				</div>
 				<div className='row'>
-					<div className='col mb-3'>
+					<div className='col-6 mb-1'>
+						<label htmlFor='city' className='form-label'>
+							<strong>City:</strong>
+						</label>
+						<input
+							type='text'
+							className={`form-control ${!isValidField("city") ? "is-invalid" : ""}`}
+							id='city'
+							name='city'
+							value={editUserData.address.city}
+							onChange={handleChange}
+						/>
+					</div>
+					<div className='col-3 mb-1'>
 						<label htmlFor='street' className='form-label'>
 							<strong>Street:</strong>
 						</label>
@@ -153,7 +166,7 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 							onChange={handleChange}
 						/>
 					</div>
-					<div className='col mb-3'>
+					<div className='col-3 mb-1'>
 						<label htmlFor='addressSuite' className='form-label'>
 							<strong>Suite:</strong>
 						</label>
@@ -167,22 +180,24 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 						/>
 					</div>
 				</div>
-				<div className='row'>
+				<div className='row mt-4'>
 					<div className='col'>
 						<button
 							type='submit'
-							className='btn btn-primary'
+							className='btn btn-primary btn-sm'
 							disabled={!enableSave}>
 							Save Changes
 						</button>
 						{enableReset && (
-							<button type='reset' className='btn btn-link'>
+							<button
+								type='reset'
+								className='btn btn-link btn-sm'>
 								Reset
 							</button>
 						)}
 						{!enableReset && (
 							<button
-								className='btn btn-link text-danger'
+								className='btn btn-link btn-sm text-danger'
 								onClick={onClose}>
 								Cancel
 							</button>

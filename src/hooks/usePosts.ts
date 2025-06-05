@@ -28,7 +28,7 @@ export function usePostsManager() {
 
 	// update post data
 	const updatePostInfo = async (data: Post) => {
-		setLoadingPosts(true);
+		// setLoadingPosts(true);
 		try {
 			updatePost(data);
 			// Update the posts in the state
@@ -38,7 +38,7 @@ export function usePostsManager() {
 		} catch (error) {
 			setErrorPosts("Failed to update posts");
 		} finally {
-			setTimeout(() => setLoadingPosts(false), 1000);
+			// setTimeout(() => setLoadingPosts(false), 1000);
 		}
 	};
 
