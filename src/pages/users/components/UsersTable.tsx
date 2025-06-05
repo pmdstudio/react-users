@@ -29,9 +29,6 @@ const UsersTable: React.FC<Props> = ({ users, onChange }) => {
 
 	return (
 		<>
-			<h2>
-				<i className='bi bi-person me-4'></i>Users
-			</h2>
 			<div className='accordion' id='usersAccordion'>
 				{users.map((user) => (
 					<div className='accordion-item' key={user.id}>
@@ -56,13 +53,24 @@ const UsersTable: React.FC<Props> = ({ users, onChange }) => {
 							className='accordion-collapse collapse'
 							aria-labelledby={`heading-${user.id}`}
 							data-bs-parent='#usersAccordion'>
-							<div className='accordion-body'>
+							<div className='accordion-body position-relative'>
 								{viewEditUser && (
-									<UserEdit
-										userData={user}
-										onSubmit={handleUpdateUserData}
-										onClose={() => setViewEditUser(false)}
-									/>
+									<>
+										<UserEdit
+											userData={user}
+											onSubmit={handleUpdateUserData}
+											onClose={() =>
+												setViewEditUser(false)
+											}
+										/>
+										<a
+											className='btn btn-link btn-sm my-2 mx-4 text-danger position-absolute top-0 end-0 z-10'
+											onClick={() =>
+												setViewEditUser(false)
+											}>
+											<i className='bi bi-x-lg'></i>
+										</a>
+									</>
 								)}
 								{!viewEditUser && (
 									<>
@@ -74,9 +82,9 @@ const UsersTable: React.FC<Props> = ({ users, onChange }) => {
 												View posts
 											</Link>
 											<div
-												className='btn btn-link text-danger btn-sm'
+												className='btn btn-link btn-sm m-4 text-danger position-absolute top-0 end-0 z-10'
 												onClick={handleEditUser}>
-												Edit user
+												Edit
 											</div>
 										</div>
 									</>

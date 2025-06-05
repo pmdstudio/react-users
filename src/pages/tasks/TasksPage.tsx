@@ -46,7 +46,9 @@ const TasksPage: React.FC = () => {
 				{loadingTasks && <Loading text='Loading tasks' />}
 				{!loadingTasks && (
 					<>
-						<h2 className='mb-4'>Tasks</h2>
+						<h2 className='my-4'>
+							<i className='bi bi-list-task me-2'></i> Tasks
+						</h2>
 						<TasksFilter onFilterChange={onFilterChange} />
 						<div className='table-responsive'>
 							<TasksList

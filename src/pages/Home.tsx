@@ -1,11 +1,18 @@
 import React from "react";
 import TasksBlock from "./tasks/components/TasksBlock";
 import UsersBlock from "./users/components/UsersBlock";
+import globe from "../assets/globe-bg.png";
 
 const Home: React.FC = () => {
 	return (
 		<>
-			<div className='p-5 mb-4 bg-body-tertiary rounded-3'>
+			<div
+				className='p-5 mb-4 bg-body-tertiary rounded-3'
+				style={{
+					backgroundImage: `url(${globe})`,
+					backgroundRepeat: "no-repeat",
+					backgroundPosition: "bottom right",
+				}}>
 				<div className='container-fluid py-5'>
 					<h1 className='display-5 fw-bold'>Welcome</h1>
 					<p className='col-md-8 fs-4'>

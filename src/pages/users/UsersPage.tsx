@@ -27,8 +27,11 @@ const UsersPage: React.FC = () => {
 
 	return (
 		<>
-			<div className='container position-relative h-100'>
+			<div className='container position-relative h-100 p-0'>
 				{loadingUsers && <Loading text='Loading users ...' />}
+				<h2 className='my-4'>
+					<i className='bi bi-person me-2'></i>Users
+				</h2>
 				<UsersTable users={usersList} onChange={updateUsersList} />
 			</div>
 		</>
