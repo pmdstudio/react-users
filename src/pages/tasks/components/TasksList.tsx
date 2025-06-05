@@ -1,8 +1,8 @@
 import React from "react";
-import { Task } from "../../../types";
+import { Task, TaskWithUser, TASK_STATUS } from "../../../types";
 
 type Props = {
-	tasks: Task[];
+	tasks: TaskWithUser[];
 	selectedPage: number;
 	pageSize: number;
 	onStatusChange: (updatedTask: Task) => void;
@@ -31,7 +31,7 @@ const TasksList: React.FC<Props> = ({
 				</div>
 			)}
 			{tasks.length > 0 && (
-				<table className='table table-hover'>
+				<table className='table table-hover' key={""}>
 					<thead className='table-light'>
 						<tr>
 							<th scope='col' style={{ width: "30px" }}></th>
@@ -44,12 +44,12 @@ const TasksList: React.FC<Props> = ({
 					</thead>
 					<tbody>
 						{tasks.map((task, index) => (
-							<tr key={task.id}>
+							<tr key={`${task.id}-${index}`}>
 								<td>
 									{(selectedPage - 1) * pageSize + index + 1}
 								</td>
 								<td>{task.title}</td>
-								<td>{task.userId}</td>
+								<td>{task.user?.name}</td>
 								<td>
 									<div className='btn-group w-100'>
 										<button
@@ -64,9 +64,9 @@ const TasksList: React.FC<Props> = ({
 													role='status'
 													aria-hidden='true'></span>
 											) : task.completed ? (
-												"Completed"
+												TASK_STATUS.completed
 											) : (
-												"Pending"
+												TASK_STATUS.pending
 											)}
 										</button>
 										<button
@@ -90,8 +90,8 @@ const TasksList: React.FC<Props> = ({
 														handleChangeStatus(task)
 													}>
 													{task.completed
-														? "Pending"
-														: "Completed"}
+														? TASK_STATUS.completed
+														: TASK_STATUS.pending}
 												</button>
 											</li>
 										</ul>

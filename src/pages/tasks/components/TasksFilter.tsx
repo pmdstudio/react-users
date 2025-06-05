@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TaskFilter, taskStatuses } from "../../../types";
+import { TaskFilter, TASK_STATUS } from "../../../types";
 import { UsersFilter } from "../../../components";
 
 interface TasksFilterProps {
@@ -8,7 +8,7 @@ interface TasksFilterProps {
 
 const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 	const emptyFilter = {
-		completed: undefined,
+		completed: "",
 		title: "",
 		userId: 0,
 	};
@@ -49,22 +49,15 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 							className='form-select'
 							id='statusFilter'
 							name='completed'
-							value={
-								filter.completed === undefined
-									? ""
-									: filter.completed
-							}
+							value={filter.completed ?? undefined}
 							onChange={handleFilterChange}>
 							<option value=''>All</option>
-							{taskStatuses.map((status) => (
-								<option key={status.value} value={status.value}>
-									{status.title}
-								</option>
-							))}
+							<option value={0}>{TASK_STATUS.pending}</option>
+							<option value={1}>{TASK_STATUS.completed}</option>
 						</select>
 					</div>
 
-					<div className='col-md-4'>
+					<div className='col-md-5'>
 						<label htmlFor='titleFilter' className='form-label'>
 							Task Title
 						</label>
@@ -89,7 +82,7 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 						/>
 					</div>
 
-					<div className='col-md-2 d-flex align-items-end'>
+					<div className='col-md-1 d-flex align-items-end'>
 						<button
 							type='button'
 							onClick={handleClearFilter}

@@ -1,3 +1,5 @@
+import { User } from "./users";
+
 export type Task = {
 	userId: number;
 	id: number;
@@ -5,15 +7,24 @@ export type Task = {
 	completed: boolean;
 };
 
+export type TaskWithUser = {
+	userId: number;
+	id: number;
+	title: string;
+	completed: boolean;
+	user: User | null;
+};
+
 export type Tasks = Task[];
 export type TaskStatus = "completed" | "pending";
 
+export const TASK_STATUS = {
+	completed: "Completed",
+	pending: "Pending",
+};
+
 export type TaskFilter = {
-	completed: number | undefined;
+	completed: number | string;
 	title: string;
 	userId: number;
 };
-export const taskStatuses: { value: number; title: string }[] = [
-	{ value: 0, title: "Pending" },
-	{ value: 1, title: "Completed" },
-];

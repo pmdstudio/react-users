@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useState, useEffect, useCallback } from "react";
-import { fetchTasks, updateTask } from "../services";
-import { Task, TaskFilter } from "../types";
+import { fetchTasks, fetchUsers, updateTask } from "../services";
+import { Task, TaskFilter, TaskWithUser } from "../types";
 
 export function useTasksManager() {
-	const [tasks, setTasks] = useState<Task[]>([]);
-	const [allTasks, setAllTasks] = useState<Task[]>([]);
+	const [tasks, setTasks] = useState<TaskWithUser[]>([]);
+	const [allTasks, setAllTasks] = useState<TaskWithUser[]>([]);
 
 	const [loadingTasks, setLoadingTasks] = useState(true);
 	const [errorTasks, setErrorTasks] = useState<string | null>(null);
@@ -22,9 +22,23 @@ export function useTasksManager() {
 		setLoadingTasks(true);
 		setErrorTasks(null);
 		try {
-			const data = await fetchTasks();
-			setTasks(data);
-			setAllTasks(data);
+			// const data = await fetchTasks();
+			const [fetchedTasks, fetchedUsers] = await Promise.all([
+				fetchTasks(),
+				fetchUsers(),
+			]);
+
+			// Merge stats into each user
+			const tasksWithUsers = fetchedTasks.map((task) => ({
+				...task,
+				user:
+					fetchedUsers.find(
+						(user) => Number(user.id) === Number(task.userId)
+					) ?? null,
+			}));
+
+			setTasks(tasksWithUsers);
+			setAllTasks(tasksWithUsers);
 		} catch (error) {
 			setErrorTasks("Error fetching tasks");
 		} finally {
@@ -44,9 +58,10 @@ export function useTasksManager() {
 		(filter: TaskFilter) => {
 			const filteredTasks = allTasks.filter((task) => {
 				const matchesStatus =
-					filter.completed !== undefined
-						? Number(task.completed) == filter.completed
-						: true;
+					typeof filter.completed === "string" &&
+					filter.completed === ""
+						? true
+						: Number(task.completed) === Number(filter.completed);
 
 				const matchesTitle =
 					filter.title !== ""
