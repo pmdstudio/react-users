@@ -7,23 +7,34 @@ interface TasksFilterProps {
 }
 
 const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
-	const [filter, setFilter] = useState<TaskFilter>({
-		completed: 0,
+	const emptyFilter = {
+		completed: undefined,
 		title: "",
 		userId: 0,
-	});
+	};
+
+	const [filter, setFilter] = useState<TaskFilter>(emptyFilter);
+	const [filterChanged, setFilterChanged] = useState<boolean>(false);
 
 	const handleFilterChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
 	) => {
 		const { name, value } = e.target;
-		// onFilterChange({ ...filters, [name]: value } as TaskFilter);
-		setFilter((prev) => ({ ...prev, [name]: value }));
+		const newFilter = { ...filter, [name]: value } as TaskFilter;
+
+		onFilterChange(newFilter);
+		setFilter(newFilter);
+		setFilterChanged(true);
 	};
 
-	const handleSubmitFilter = () => {
-		console.log("Submitting filter:", filter);
-		onFilterChange(filter);
+	// const handleSubmitFilter = () => {
+	// 	onFilterChange(filter);
+	// };
+
+	const handleClearFilter = () => {
+		onFilterChange(emptyFilter);
+		setFilter(emptyFilter);
+		setFilterChanged(false);
 	};
 
 	return (
@@ -38,6 +49,11 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 							className='form-select'
 							id='statusFilter'
 							name='completed'
+							value={
+								filter.completed === undefined
+									? ""
+									: filter.completed
+							}
 							onChange={handleFilterChange}>
 							<option value=''>All</option>
 							{taskStatuses.map((status) => (
@@ -57,6 +73,7 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 							className='form-control'
 							id='titleFilter'
 							name='title'
+							value={filter.title}
 							placeholder='Search by title'
 							onChange={handleFilterChange}
 						/>
@@ -66,15 +83,19 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 						<label htmlFor='ownerFilter' className='form-label'>
 							Owner
 						</label>
-						<UsersFilter onChange={handleFilterChange} />
+						<UsersFilter
+							onChange={handleFilterChange}
+							value={filter.userId}
+						/>
 					</div>
 
 					<div className='col-md-2 d-flex align-items-end'>
 						<button
 							type='button'
-							onClick={handleSubmitFilter}
-							className='btn btn-primary w-100'>
-							Filter
+							onClick={handleClearFilter}
+							className='btn btn-primary w-100'
+							disabled={!filterChanged}>
+							Clear
 						</button>
 					</div>
 				</div>

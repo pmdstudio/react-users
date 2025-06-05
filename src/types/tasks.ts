@@ -9,7 +9,7 @@ export type Tasks = Task[];
 export type TaskStatus = "completed" | "pending";
 
 export type TaskFilter = {
-	completed: number;
+	completed: number | undefined;
 	title: string;
 	userId: number;
 };

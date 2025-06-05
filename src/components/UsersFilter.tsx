@@ -3,17 +3,19 @@ import { useUsersManager } from "../hooks";
 
 type Props = {
 	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+	value: number;
 };
 
-const UsersFilter: React.FC<Props> = ({ onChange }) => {
+const UsersFilter: React.FC<Props> = ({ onChange, value }) => {
 	const { users } = useUsersManager();
 	return (
 		<select
 			className='form-select'
 			id='userFilter'
 			name='userId'
+			value={value}
 			onChange={onChange}>
-			<option value=''>All</option>
+			<option value='0'>All</option>
 			{users.map((user) => (
 				<option key={user.id} value={user.id}>
 					{user.name}
