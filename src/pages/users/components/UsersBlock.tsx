@@ -6,8 +6,9 @@ const UsersBlock: React.FC = () => {
 		<div className='h-100 p-5 text-bg-dark rounded-3'>
 			<h2>Users</h2>
 			<p>
-				This section displays a list of users fetched from the JSON
-				Placeholder API. Click on a user to see more details about them.
+				This section displays a list of colapsable users fetched from
+				the JSON Placeholder API. You can edit user details and see the
+				users posts.
 			</p>
 			<Link to='/users' className='btn btn-outline-light'>
 				View users

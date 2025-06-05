@@ -1,8 +1,9 @@
 import React from "react";
-import { Routes, Route, Link } from "react-router-dom";
-import { Home, UsersPage, UserInfoPage, TasksPage } from "./pages";
+import { Link } from "react-router-dom";
+import AppRoutes from "./routes/AppRoutes";
+import { Breadcrumbs } from "./components";
 
-function App() {
+const App = () => {
 	return (
 		<>
 			<nav className='navbar navbar-expand-lg navbar-dark bg-dark px-3'>
@@ -21,15 +22,9 @@ function App() {
 				</div>
 			</nav>
 
-			<div className='container flex flex-grow-1 py-5'>
-				<Routes>
-					<Route path='/' element={<Home />} />
-					<Route path='/users'>
-						<Route index element={<UsersPage />} />
-						<Route path=':userId' element={<UserInfoPage />} />
-					</Route>
-					<Route path='/tasks' element={<TasksPage />} />
-				</Routes>
+			<div className='container position-relative overflow-hidden flex flex-grow-1 py-5'>
+				<Breadcrumbs />
+				<AppRoutes />
 			</div>
 
 			<footer className='footer mt-auto py-3 bg-body-tertiary'>
@@ -41,6 +36,6 @@ function App() {
 			</footer>
 		</>
 	);
-}
+};
 
 export default App;

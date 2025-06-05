@@ -30,7 +30,7 @@ const UsersTable: React.FC<Props> = ({ users, onChange }) => {
 	return (
 		<>
 			<h2>
-				<i className='bi bi-person'></i> Users
+				<i className='bi bi-person me-4'></i>Users
 			</h2>
 			<div className='accordion' id='usersAccordion'>
 				{users.map((user) => (
@@ -67,15 +67,17 @@ const UsersTable: React.FC<Props> = ({ users, onChange }) => {
 								{!viewEditUser && (
 									<>
 										<UserInfo userData={user} />
-										<Link
-											className='btn btn-primary me-1'
-											to={`/users/${user.id}`}>
-											View posts
-										</Link>
-										<div
-											className='btn btn-link text-danger'
-											onClick={handleEditUser}>
-											Edit user
+										<div className='mt-2'>
+											<Link
+												className='btn btn-primary btn-sm me-1'
+												to={`/users/${user.id}`}>
+												View posts
+											</Link>
+											<div
+												className='btn btn-link text-danger btn-sm'
+												onClick={handleEditUser}>
+												Edit user
+											</div>
 										</div>
 									</>
 								)}

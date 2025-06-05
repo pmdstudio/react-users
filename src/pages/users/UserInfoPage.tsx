@@ -4,7 +4,7 @@ import { User } from "../../types";
 import UserPosts from "./components/UserPosts";
 import UserInfo from "./components/UserInfo";
 import UserEdit from "./components/UserEdit";
-import { Breadcrumbs, Loading } from "../../components";
+import { Loading } from "../../components";
 
 const UserInfoPage = () => {
 	const { userInfo, loadingUserInfo, errorUserInfo } = useUserInfo();
@@ -38,7 +38,6 @@ const UserInfoPage = () => {
 
 	return (
 		<>
-			<Breadcrumbs />
 			<div className='container position-relative'>
 				{(loadingUserInfo || loadingPosts) && <Loading />}
 				<div className='row'>

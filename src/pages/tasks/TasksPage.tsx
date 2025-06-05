@@ -1,4 +1,4 @@
-import { Breadcrumbs, Loading } from "../../components";
+import { Loading } from "../../components";
 import { useTasksManager } from "../../hooks";
 import React, { useEffect } from "react";
 import TasksFilter from "./components/TasksFilter";
@@ -42,7 +42,6 @@ const TasksPage: React.FC = () => {
 
 	return (
 		<>
-			<Breadcrumbs />
 			<div className='container position-relative h-100'>
 				{loadingTasks && <Loading text='Loading tasks' />}
 				{!loadingTasks && (

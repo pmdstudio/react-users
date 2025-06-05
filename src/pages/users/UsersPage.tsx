@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUsersManager } from "../../hooks";
 import UsersTable from "./components/UsersTable";
-import { Breadcrumbs, Loading } from "../../components";
+import { Loading } from "../../components";
 import { User } from "../../types";
 
 const UsersPage: React.FC = () => {
@@ -27,7 +27,6 @@ const UsersPage: React.FC = () => {
 
 	return (
 		<>
-			<Breadcrumbs />
 			<div className='container position-relative h-100'>
 				{loadingUsers && <Loading text='Loading users ...' />}
 				<UsersTable users={usersList} onChange={updateUsersList} />
