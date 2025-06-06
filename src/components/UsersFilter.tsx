@@ -10,7 +10,7 @@ const UsersFilter: React.FC<Props> = ({ onChange, value }) => {
 	const { users } = useUsersManager();
 	return (
 		<select
-			className='form-select'
+			className='form-select form-select-sm'
 			id='userFilter'
 			name='userId'
 			value={value}

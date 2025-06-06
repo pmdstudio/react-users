@@ -35,13 +35,13 @@ const UserInfo: React.FC<Props> = ({ userData }) => {
 				/>
 				<div className='flex-grow-1'>
 					<div className='row'>
-						<div className='col-4'>
+						<div className='col-md-5'>
 							<h4 className='card-title mb-1'>{userData.name}</h4>
 							<h6 className='card-subtitle mb-2 text-muted'>
 								@{userData.username}
 							</h6>
 						</div>
-						<div className='col-8'>
+						<div className='col-md-7'>
 							<i className='bi bi-envelope'></i> {userData.email}
 							<br />
 							<i className='bi bi-geo-alt'></i>{" "}

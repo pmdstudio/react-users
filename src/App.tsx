@@ -1,27 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
-import { Breadcrumbs } from "./components";
+import { Breadcrumbs, Navbar } from "./components";
 
 const App = () => {
 	return (
 		<>
-			<nav className='navbar navbar-expand-lg navbar-dark bg-dark px-3'>
-				<div className='container'>
-					<a className='navbar-brand' href='/'>
-						React Users
-					</a>
-					<div className='navbar-nav'>
-						<Link className='nav-link' to='/users'>
-							Users
-						</Link>
-						<Link className='nav-link' to='/tasks'>
-							Tasks
-						</Link>
-					</div>
-				</div>
-			</nav>
-
+			<Navbar />
 			<div className='container position-relative overflow-hidden flex flex-grow-1 py-5'>
 				<Breadcrumbs />
 				<AppRoutes />

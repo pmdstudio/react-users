@@ -97,26 +97,26 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 
 			<form onSubmit={handleSubmit} onReset={handleReset}>
 				<div className='row'>
-					<div className='col mb-1'>
+					<div className='col-md mb-1'>
 						<label htmlFor='name' className='form-label'>
 							<strong>Name: </strong>
 						</label>
 						<input
 							type='text'
-							className={`form-control ${!isValidField("name") ? "is-invalid" : ""}`}
+							className={`form-control form-control-sm ${!isValidField("name") ? "is-invalid" : ""}`}
 							id='name'
 							name='name'
 							value={editUserData.name}
 							onChange={handleChange}
 						/>
 					</div>
-					<div className='col mb-1'>
+					<div className='col-md mb-1'>
 						<label htmlFor='username' className='form-label'>
 							<strong>Username:</strong>
 						</label>
 						<input
 							type='text'
-							className={`form-control ${!isValidField("username") ? "is-invalid" : ""}`}
+							className={`form-control form-control-sm ${!isValidField("username") ? "is-invalid" : ""}`}
 							id='username'
 							name='username'
 							value={editUserData.username}
@@ -131,7 +131,7 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 						</label>
 						<input
 							type='email'
-							className={`form-control ${!isValidField("email") ? "is-invalid" : ""}`}
+							className={`form-control form-control-sm ${!isValidField("email") ? "is-invalid" : ""}`}
 							id='email'
 							name='email'
 							value={editUserData.email}
@@ -140,39 +140,39 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 					</div>
 				</div>
 				<div className='row'>
-					<div className='col-6 mb-1'>
+					<div className='col-md-6 mb-1'>
 						<label htmlFor='city' className='form-label'>
 							<strong>City:</strong>
 						</label>
 						<input
 							type='text'
-							className={`form-control ${!isValidField("city") ? "is-invalid" : ""}`}
+							className={`form-control form-control-sm ${!isValidField("city") ? "is-invalid" : ""}`}
 							id='city'
 							name='city'
 							value={editUserData.address.city}
 							onChange={handleChange}
 						/>
 					</div>
-					<div className='col-3 mb-1'>
+					<div className='col-md-3 mb-1'>
 						<label htmlFor='street' className='form-label'>
 							<strong>Street:</strong>
 						</label>
 						<input
 							type='text'
-							className={`form-control ${!isValidField("street") ? "is-invalid" : ""}`}
+							className={`form-control form-control-sm ${!isValidField("street") ? "is-invalid" : ""}`}
 							id='street'
 							name='street'
 							value={editUserData.address.street}
 							onChange={handleChange}
 						/>
 					</div>
-					<div className='col-3 mb-1'>
+					<div className='col-md-3 mb-1'>
 						<label htmlFor='addressSuite' className='form-label'>
 							<strong>Suite:</strong>
 						</label>
 						<input
 							type='text'
-							className={`form-control ${!isValidField("suite") ? "is-invalid" : ""}`}
+							className={`form-control form-control-sm ${!isValidField("suite") ? "is-invalid" : ""}`}
 							id='addressSuite'
 							name='suite'
 							value={editUserData.address.suite}
@@ -181,7 +181,7 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 					</div>
 				</div>
 				<div className='row mt-4'>
-					<div className='col'>
+					<div className='col-md'>
 						<button
 							type='submit'
 							className='btn btn-primary btn-sm'
@@ -203,7 +203,7 @@ const UserEdit: React.FC<Props> = ({ userData, onSubmit, onClose }) => {
 							</button>
 						)}
 					</div>
-					<div className='col d-flex flex-column justify-content-center'>
+					<div className='col-md d-flex flex-column justify-content-center'>
 						{showValidationError && (
 							<span className='text-danger'>
 								<em>Please fill all required fields</em>

@@ -35,7 +35,7 @@ const TasksList: React.FC<Props> = ({
 				</div>
 			)}
 			{tasks.length > 0 && (
-				<table className='table table-hover' key={""}>
+				<table className='table table-hover m-0' key={""}>
 					<thead className='table-light'>
 						<tr>
 							<th scope='col' style={{ width: "30px" }}></th>

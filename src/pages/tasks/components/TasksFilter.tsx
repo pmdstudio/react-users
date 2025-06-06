@@ -41,12 +41,12 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 		<div className='card mb-4'>
 			<div className='card-body'>
 				<div className='row g-3'>
-					<div className='col-md-3'>
+					<div className='col-md-6 col-lg-3'>
 						<label htmlFor='statusFilter' className='form-label'>
 							Status
 						</label>
 						<select
-							className='form-select'
+							className='form-select form-select-sm'
 							id='statusFilter'
 							name='completed'
 							value={filter.completed ?? undefined}
@@ -57,13 +57,13 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 						</select>
 					</div>
 
-					<div className='col-md-5'>
+					<div className='col-md-6 col-lg-5'>
 						<label htmlFor='titleFilter' className='form-label'>
 							Task Title
 						</label>
 						<input
 							type='text'
-							className='form-control'
+							className='form-control form-control-sm'
 							id='titleFilter'
 							name='title'
 							value={filter.title}
@@ -72,7 +72,7 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 						/>
 					</div>
 
-					<div className='col-md-3'>
+					<div className='col-md-6 col-lg-3'>
 						<label htmlFor='ownerFilter' className='form-label'>
 							Owner
 						</label>
@@ -82,11 +82,11 @@ const TasksFilter: React.FC<TasksFilterProps> = ({ onFilterChange }) => {
 						/>
 					</div>
 
-					<div className='col-md-1 d-flex align-items-end'>
+					<div className='col d-flex align-items-end'>
 						<button
 							type='button'
 							onClick={handleClearFilter}
-							className='btn btn-primary w-100'
+							className='btn btn-primary btn-sm w-100'
 							disabled={!filterChanged}>
 							Clear
 						</button>

@@ -18,7 +18,7 @@ const TasksPage: React.FC = () => {
 	} = useTasksManager();
 
 	const [selectedPage, setSelectedPage] = React.useState(1);
-	const pageSize = 10;
+	const pageSize = 20;
 
 	useEffect(() => {
 		// Set the number of tasks per page
@@ -50,7 +50,7 @@ const TasksPage: React.FC = () => {
 							<i className='bi bi-list-task me-2'></i> Tasks
 						</h2>
 						<TasksFilter onFilterChange={onFilterChange} />
-						<div className='table-responsive'>
+						<div className='table-responsive card p-1'>
 							<TasksList
 								tasks={tasks}
 								selectedPage={selectedPage}
@@ -58,35 +58,38 @@ const TasksPage: React.FC = () => {
 								onStatusChange={onStatusChange}
 								updatingTaskId={updatingTaskId}
 							/>
-							<nav>
-								<ul className='pagination justify-content-center'>
-									{Array.from(
-										{ length: tasksPages },
-										(_, index) => {
-											const page = index + 1;
-											return (
-												<li
-													key={page}
-													className={`page-item ${
-														selectedPage === page
-															? "active"
-															: ""
-													}`}>
-													<button
-														className='page-link'
-														onClick={() =>
-															handlePageChange(
-																page
-															)
-														}>
-														{page}
-													</button>
-												</li>
-											);
-										}
-									)}
-								</ul>
-							</nav>
+							{tasks.length > 0 && (
+								<nav className='d-flex justify-content-center bg-light'>
+									<ul className='pagination m-2'>
+										{Array.from(
+											{ length: tasksPages },
+											(_, index) => {
+												const page = index + 1;
+												return (
+													<li
+														key={page}
+														className={`page-item ${
+															selectedPage ===
+															page
+																? "active"
+																: ""
+														}`}>
+														<button
+															className='page-link'
+															onClick={() =>
+																handlePageChange(
+																	page
+																)
+															}>
+															{page}
+														</button>
+													</li>
+												);
+											}
+										)}
+									</ul>
+								</nav>
+							)}
 						</div>
 					</>
 				)}
