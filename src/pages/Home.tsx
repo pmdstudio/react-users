@@ -84,7 +84,6 @@ const Home: React.FC = () => {
 										</li>
 									</ul>
 								</div>
-								{/* Task Features */}
 
 								<div className='col-md-4'>
 									<h5>

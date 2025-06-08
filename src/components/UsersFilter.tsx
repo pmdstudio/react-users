@@ -1,5 +1,5 @@
 import React from "react";
-import { useUsersManager } from "../hooks";
+import { useUsers } from "../contexts/UsersContext";
 
 type Props = {
 	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -7,7 +7,7 @@ type Props = {
 };
 
 const UsersFilter: React.FC<Props> = ({ onChange, value }) => {
-	const { users } = useUsersManager();
+	const { users } = useUsers();
 	return (
 		<select
 			className='form-select form-select-sm'

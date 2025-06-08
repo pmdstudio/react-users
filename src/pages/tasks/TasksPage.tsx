@@ -1,5 +1,5 @@
 import { Loading } from "../../components";
-import { useTasksManager } from "../../hooks";
+import { useTasksManager } from "../../hooks/useTasks";
 import React, { useEffect } from "react";
 import TasksFilter from "./components/TasksFilter";
 import { Task, TaskFilter } from "../../types";

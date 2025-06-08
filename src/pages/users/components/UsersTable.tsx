@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { User, Users } from "../../../types";
 import UserEdit from "./UserEdit";
-import { useUsersManager } from "../../../hooks";
 import UserInfo from "./UserInfo";
+import { useUsers } from "../../../contexts/UsersContext";
 
 type Props = {
 	users: Users;
@@ -12,7 +12,7 @@ type Props = {
 
 const UsersTable: React.FC<Props> = ({ users, onChange }) => {
 	const [viewEditUser, setViewEditUser] = useState<boolean>(false);
-	const { updateUser } = useUsersManager();
+	const { updateUser } = useUsers();
 
 	const handleEditUser = () => {
 		setViewEditUser(!viewEditUser);

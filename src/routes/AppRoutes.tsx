@@ -1,22 +1,45 @@
 import React, { lazy, Suspense } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Outlet } from "react-router-dom";
+import { AppProviders } from "../contexts/AppProviders";
+import { Navbar, Breadcrumbs } from "../components";
 
-// loaded pages async
+// Lazy pages
 const Home = lazy(() => import("../pages/Home"));
 const UsersPage = lazy(() => import("../pages/users/UsersPage"));
 const UserInfoPage = lazy(() => import("../pages/users/UserInfoPage"));
 const TasksPage = lazy(() => import("../pages/tasks/TasksPage"));
 
+const AppLayout = () => (
+	<AppProviders>
+		<>
+			<Navbar />
+			<div className='container position-relative overflow-hidden flex flex-grow-1 py-5'>
+				<Breadcrumbs />
+				<Outlet />
+			</div>
+			<footer className='footer mt-auto py-3 bg-body-tertiary'>
+				<div className='container text-center'>
+					<span className='text-body-secondary'>
+						develop by <strong>Marin Petrov</strong>, petrovm@abv.bg
+					</span>
+				</div>
+			</footer>
+		</>
+	</AppProviders>
+);
+
 const AppRoutes = () => {
 	return (
 		<Suspense>
 			<Routes>
-				<Route path='/' element={<Home />} />
-				<Route path='/users'>
-					<Route index element={<UsersPage />} />
-					<Route path=':userId' element={<UserInfoPage />} />
+				<Route element={<AppLayout />}>
+					<Route path='/' element={<Home />} />
+					<Route path='/users'>
+						<Route index element={<UsersPage />} />
+						<Route path=':userId' element={<UserInfoPage />} />
+					</Route>
+					<Route path='/tasks' element={<TasksPage />} />
 				</Route>
-				<Route path='/tasks' element={<TasksPage />} />
 			</Routes>
 		</Suspense>
 	);
