@@ -30,7 +30,7 @@ export async function updatePost(postData: Post): Promise<Post> {
 			}
 		);
 
-		return response.json();
+		return await response.json();
 	} catch (error) {
 		return Promise.reject(error);
 	}

@@ -1,6 +1,5 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
-import { AppProviders } from "../contexts/AppProviders";
 import { Navbar, Breadcrumbs } from "../components";
 
 // Lazy pages
@@ -10,22 +9,20 @@ const UserInfoPage = lazy(() => import("../pages/users/UserInfoPage"));
 const TasksPage = lazy(() => import("../pages/tasks/TasksPage"));
 
 const AppLayout = () => (
-	<AppProviders>
-		<>
-			<Navbar />
-			<div className='container position-relative overflow-hidden flex flex-grow-1 py-5'>
-				<Breadcrumbs />
-				<Outlet />
+	<>
+		<Navbar />
+		<div className="container position-relative overflow-hidden flex flex-grow-1 py-5">
+			<Breadcrumbs />
+			<Outlet />
+		</div>
+		<footer className="footer mt-auto py-3 bg-body-tertiary">
+			<div className="container text-center">
+				<span className="text-body-secondary">
+					develop by <strong>Marin Petrov</strong>, petrovm@abv.bg
+				</span>
 			</div>
-			<footer className='footer mt-auto py-3 bg-body-tertiary'>
-				<div className='container text-center'>
-					<span className='text-body-secondary'>
-						develop by <strong>Marin Petrov</strong>, petrovm@abv.bg
-					</span>
-				</div>
-			</footer>
-		</>
-	</AppProviders>
+		</footer>
+	</>
 );
 
 const AppRoutes = () => {
@@ -33,12 +30,12 @@ const AppRoutes = () => {
 		<Suspense>
 			<Routes>
 				<Route element={<AppLayout />}>
-					<Route path='/' element={<Home />} />
-					<Route path='/users'>
+					<Route path="/" element={<Home />} />
+					<Route path="/users">
 						<Route index element={<UsersPage />} />
-						<Route path=':userId' element={<UserInfoPage />} />
+						<Route path=":userId" element={<UserInfoPage />} />
 					</Route>
-					<Route path='/tasks' element={<TasksPage />} />
+					<Route path="/tasks" element={<TasksPage />} />
 				</Route>
 			</Routes>
 		</Suspense>

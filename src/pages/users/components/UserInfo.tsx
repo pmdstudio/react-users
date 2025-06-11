@@ -15,36 +15,26 @@ const getUserAbbreviation = (name?: string) => {
 
 const UserInfo: React.FC<Props> = ({ userData }) => {
 	const abbr = getUserAbbreviation(userData.name);
-	if (
-		!userData ||
-		!userData.name ||
-		!userData.username ||
-		!userData.email ||
-		!userData.address
-	) {
-		return;
-	}
-
 	return (
-		<div className='card mb-1'>
-			<div className='card-body d-flex align-items-center'>
+		<div className="card mb-1">
+			<div className="card-body d-flex align-items-center">
 				<img
 					src={`https://placehold.co/80x80?text=${abbr}`}
 					alt={userData.name}
-					className='rounded-circle me-3'
+					className="rounded-circle me-3"
 				/>
-				<div className='flex-grow-1'>
-					<div className='row'>
-						<div className='col-md-5'>
-							<h4 className='card-title mb-1'>{userData.name}</h4>
-							<h6 className='card-subtitle mb-2 text-muted'>
+				<div className="flex-grow-1">
+					<div className="row">
+						<div className="col-md-5">
+							<h4 className="card-title mb-1">{userData.name}</h4>
+							<h6 className="card-subtitle mb-2 text-muted">
 								@{userData.username}
 							</h6>
 						</div>
-						<div className='col-md-7'>
-							<i className='bi bi-envelope'></i> {userData.email}
+						<div className="col-md-7">
+							<i className="bi bi-envelope"></i> {userData.email}
 							<br />
-							<i className='bi bi-geo-alt'></i>{" "}
+							<i className="bi bi-geo-alt"></i>{" "}
 							{`${userData.address.street}, ${userData.address.suite}, ${userData.address.city}`}
 						</div>
 					</div>

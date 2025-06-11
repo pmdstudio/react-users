@@ -1,35 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import UsersTable from "./components/UsersTable";
 import { Loading } from "../../components";
-import { User } from "../../types";
-import { useUsers } from "../../contexts/UsersContext";
+
+import { useSelector, useDispatch } from "react-redux";
+import { getUsers } from "../../store/slices/userSlice";
+import type { RootState, AppDispatch } from "../../store";
 
 const UsersPage: React.FC = () => {
-	const { users, loadingUsers } = useUsers();
-	const [usersList, setUsersList] = useState<User[]>([]);
+	const dispatch = useDispatch<AppDispatch>();
+
+	const users = useSelector((state: RootState) => state.users.users);
+	const loadingUsers = useSelector(
+		(state: RootState) => state.users.loadingUsers
+	);
 
 	useEffect(() => {
-		if (users && !loadingUsers) {
-			setUsersList(users);
+		if (users.length === 0) {
+			dispatch(getUsers());
 		}
-	}, [users, loadingUsers]);
-
-	const updateUsersList = (updatedUser: User) => {
-		setUsersList((prevUsers) =>
-			prevUsers.map((user) =>
-				user.id === updatedUser.id ? { ...user, ...updatedUser } : user
-			)
-		);
-	};
+	}, [dispatch, users]);
 
 	return (
 		<>
-			<div className='container position-relative h-100 p-0'>
-				{loadingUsers && <Loading text='Loading users ...' />}
-				<h2 className='my-4'>
-					<i className='bi bi-person me-2'></i>Users
+			<div className="container position-relative h-100 p-0">
+				{loadingUsers && <Loading text="Loading users ..." />}
+				<h2 className="my-4">
+					<i className="bi bi-person me-2"></i>Users
 				</h2>
-				<UsersTable users={usersList} onChange={updateUsersList} />
+				<UsersTable users={users} />
 			</div>
 		</>
 	);
