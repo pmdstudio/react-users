@@ -13,7 +13,7 @@ export async function fetchTasks(): Promise<Tasks> {
 	}
 }
 
-export async function updateTask(taskData: Task): Promise<unknown> {
+export async function updateTask(taskData: Task): Promise<Task> {
 	try {
 		const response = await fetch(
 			`https://jsonplaceholder.typicode.com/todos/${taskData.id}`,

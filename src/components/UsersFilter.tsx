@@ -1,5 +1,6 @@
 import React from "react";
-import { useUsers } from "../contexts/UsersContext";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
 
 type Props = {
 	onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -7,15 +8,24 @@ type Props = {
 };
 
 const UsersFilter: React.FC<Props> = ({ onChange, value }) => {
-	const { users } = useUsers();
+	const users = useSelector((state: RootState) => state.users.users);
+	if (!users.length) {
+		return (
+			<select className="form-select form-select-sm" disabled>
+				<option>Loading users...</option>
+			</select>
+		);
+	}
+
 	return (
 		<select
-			className='form-select form-select-sm'
-			id='userFilter'
-			name='userId'
+			className="form-select form-select-sm"
+			id="userFilter"
+			name="userId"
 			value={value}
-			onChange={onChange}>
-			<option value='0'>All</option>
+			onChange={onChange}
+		>
+			<option value="0">All</option>
 			{users.map((user) => (
 				<option key={user.id} value={user.id}>
 					{user.name}
