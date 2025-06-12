@@ -20,8 +20,8 @@ const UserInfoPage = () => {
 	const { userId } = useParams();
 	const dispatch = useDispatch<AppDispatch>();
 
-	const selectedUser = useSelector(
-		(state: RootState) => state.users.selectedUser
+	const selectedUser = useSelector((state: RootState) =>
+		state.users.users.find((u) => u.id === Number(userId))
 	);
 	const loadingUser = useSelector(
 		(state: RootState) => state.users.loadingUser
@@ -47,7 +47,7 @@ const UserInfoPage = () => {
 
 	useEffect(() => {
 		if (userId) {
-			if (!selectedUser || selectedUser.id !== Number(userId)) {
+			if (userId && !selectedUser?.id) {
 				dispatch(getUser(userId));
 			}
 			dispatch(getPosts(Number(userId)));

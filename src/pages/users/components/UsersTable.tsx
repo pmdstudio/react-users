@@ -5,7 +5,7 @@ import { AppDispatch } from "../../../store";
 import { User, Users } from "../../../types";
 import UserEdit from "./UserEdit";
 import UserInfo from "./UserInfo";
-import { getUsers, updateUser } from "../../../store/slices/userSlice";
+import { updateUser } from "../../../store/slices/userSlice";
 
 type Props = {
 	users: Users;
@@ -22,8 +22,6 @@ const UsersTable: React.FC<Props> = ({ users }) => {
 	const handleUpdateUserData = (newUserData: User) => {
 		// update backend data
 		dispatch(updateUser(newUserData));
-		dispatch(getUsers());
-
 		setViewEditUser(false);
 	};
 

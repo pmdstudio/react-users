@@ -12,7 +12,6 @@ import { Loading } from "../../components";
 import TasksList from "./components/TasksList";
 import { Task } from "../../types";
 import TasksFilter from "./components/TasksFilter";
-import { getUsers } from "../../store/slices/userSlice";
 
 const TasksPage: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
@@ -38,7 +37,6 @@ const TasksPage: React.FC = () => {
 
 	useEffect(() => {
 		dispatch(setPageSize(pageSize));
-		dispatch(getUsers());
 		dispatch(getTasks());
 	}, [dispatch]);
 

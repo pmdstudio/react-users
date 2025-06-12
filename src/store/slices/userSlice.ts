@@ -85,15 +85,18 @@ const userSlice = createSlice({
 			state.errorUserUpdate = null;
 		});
 		builder.addCase(updateUser.fulfilled, (state, action) => {
-			state.users = state.users.map((u) =>
-				u.id === action.payload.id ? action.payload : u
+			const updatedUser = action.payload;
+
+			state.users = state.users.map((user) =>
+				user.id === updatedUser.id ? updatedUser : user
 			);
 
-			if (state.selectedUser?.id === action.payload.id) {
-				state.selectedUser = action.payload;
+			if (state.selectedUser?.id === updatedUser.id) {
+				state.selectedUser = updatedUser;
 			}
 
 			state.updatingUser = false;
+			state.errorUserUpdate = null;
 		});
 		builder.addCase(updateUser.rejected, (state) => {
 			state.errorUserUpdate = "Failed to update user information";

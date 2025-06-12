@@ -4,9 +4,10 @@ import {
 	PayloadAction,
 	createSelector,
 } from "@reduxjs/toolkit";
-import { fetchTasks, fetchUsers, updateTask } from "../../services";
+import { fetchTasks, updateTask } from "../../services";
 import { Task, TaskFilter, TaskWithUser } from "../../types";
 import { RootState } from "..";
+import { getUsers } from "./userSlice";
 
 interface TasksState {
 	allTasks: TaskWithUser[];
@@ -32,19 +33,33 @@ const initialState: TasksState = {
 	filter: {} as TaskFilter,
 };
 
-export const getTasks = createAsyncThunk("tasks/getTasks", async () => {
-	const [fetchedTasks, fetchedUsers] = await Promise.all([
-		fetchTasks(),
-		fetchUsers(),
-	]);
+export const getTasks = createAsyncThunk<
+	TaskWithUser[],
+	void,
+	{ state: RootState }
+>("tasks/getTasks", async (_, { getState, dispatch }) => {
+	const state = getState();
+	let users = state.users.users;
 
-	return fetchedTasks.map((task) => ({
+	if (users.length === 0) {
+		const resultAction = await dispatch(getUsers());
+
+		if (getUsers.fulfilled.match(resultAction)) {
+			users = resultAction.payload;
+		} else {
+			throw new Error("Failed to fetch users before fetching tasks.");
+		}
+	}
+
+	const fetchedTasks = await fetchTasks();
+	const tasksWithUsers = fetchedTasks.map((task) => ({
 		...task,
 		user:
-			fetchedUsers.find(
-				(user) => Number(user.id) === Number(task.userId)
-			) ?? null,
+			users.find((user) => Number(user.id) === Number(task.userId)) ??
+			null,
 	}));
+
+	return tasksWithUsers;
 });
 
 export const updateTaskData = createAsyncThunk<Task, Task>(

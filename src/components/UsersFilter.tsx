@@ -9,6 +9,7 @@ type Props = {
 
 const UsersFilter: React.FC<Props> = ({ onChange, value }) => {
 	const users = useSelector((state: RootState) => state.users.users);
+
 	if (!users.length) {
 		return (
 			<select className="form-select form-select-sm" disabled>
