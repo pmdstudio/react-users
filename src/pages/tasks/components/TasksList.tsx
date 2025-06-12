@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Task, TaskWithUser, TASK_STATUS } from "../../../types";
 
 type Props = {
@@ -16,57 +16,53 @@ const TasksList: React.FC<Props> = ({
 	onStatusChange,
 	updatingTaskId,
 }) => {
-	const [selectedTask, setSelectedTask] = useState<Task>();
-
-	useEffect(() => {
-		if (selectedTask) {
-			onStatusChange({
-				...selectedTask,
-				completed: !selectedTask.completed,
-			});
-		}
-	}, [selectedTask]);
-
 	return (
 		<>
 			{tasks.length === 0 && (
-				<div className='alert alert-warning text-center' role='alert'>
+				<div className="alert alert-warning text-center" role="alert">
 					No tasks found.
 				</div>
 			)}
+
 			{tasks.length > 0 && (
-				<table className='table table-hover m-0' key={""}>
-					<thead className='table-light'>
+				<table className="table table-hover m-0">
+					<thead className="table-light">
 						<tr>
-							<th scope='col' style={{ width: "30px" }}></th>
-							<th scope='col'>Title</th>
-							<th scope='col' style={{ width: "300px" }}>
+							<th scope="col" style={{ width: "30px" }}></th>
+							<th scope="col">Title</th>
+							<th scope="col" style={{ width: "300px" }}>
 								User
 							</th>
-							<th scope='col' style={{ width: "100px" }}></th>
+							<th scope="col" style={{ width: "100px" }}></th>
 						</tr>
 					</thead>
 					<tbody>
 						{tasks.map((task, index) => (
-							<tr key={`${task.id}-${index}`}>
+							<tr key={task.id}>
 								<td>
 									{(selectedPage - 1) * pageSize + index + 1}
 								</td>
 								<td>{task.title}</td>
 								<td>{task.user?.name}</td>
 								<td>
-									<div className='btn-group w-100'>
+									<div className="btn-group w-100">
 										<button
-											type='button'
-											className={`btn ${task.completed ? "btn-success" : "btn-warning"} btn-sm`}
+											type="button"
+											className={`btn  ${
+												task.completed
+													? "btn-success"
+													: "btn-warning"
+											} btn-sm`}
 											disabled={
 												updatingTaskId === task.id
-											}>
+											}
+										>
 											{updatingTaskId === task.id ? (
 												<span
-													className='spinner-border spinner-border-sm'
-													role='status'
-													aria-hidden='true'></span>
+													className="spinner-border spinner-border-sm w-full"
+													role="status"
+													aria-hidden="true"
+												></span>
 											) : task.completed ? (
 												TASK_STATUS.completed
 											) : (
@@ -74,26 +70,47 @@ const TasksList: React.FC<Props> = ({
 											)}
 										</button>
 										<button
-											type='button'
-											className={`btn ${task.completed ? "btn-success" : "btn-warning"} btn-sm dropdown-toggle dropdown-toggle-split`}
-											data-bs-toggle='dropdown'
-											aria-expanded='false'
-											data-bs-auto-close='true'
-											disabled={
-												updatingTaskId === task.id
-											}>
-											<span className='visually-hidden'>
+											type="button"
+											className={`btn ${
+												task.completed
+													? "btn-success"
+													: "btn-warning"
+											} btn-sm dropdown-toggle dropdown-toggle-split`}
+											data-bs-toggle="dropdown"
+											aria-expanded="false"
+										>
+											<span className="visually-hidden">
 												Toggle Dropdown
 											</span>
 										</button>
-										<ul className='dropdown-menu p-0 overflow-hidden'>
+										<ul className="dropdown-menu p-0 overflow-hidden">
 											<li>
 												<button
-													className={`dropdown-item p-2 ${task.completed ? "text-warning" : "text-success"}`}
-													type='button'
-													onClick={() => {
-														setSelectedTask(task);
-													}}>
+													type="button"
+													className={`dropdown-item p-2 ${
+														task.completed
+															? "text-warning"
+															: "text-success"
+													}`}
+													onClick={(e) => {
+														onStatusChange({
+															...task,
+															completed:
+																!task.completed,
+														});
+
+														// Close Bootstrap dropdown manually
+														const dropdown =
+															e.currentTarget.closest(
+																".dropdown"
+															);
+														if (dropdown) {
+															dropdown.classList.remove(
+																"show"
+															);
+														}
+													}}
+												>
 													{task.completed
 														? "Open"
 														: "Complete"}
